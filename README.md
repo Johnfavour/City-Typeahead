@@ -1,36 +1,36 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# City Typeahead
 
-## Getting Started
+A typeahead search component built with Next.js and React. It queries the public [Open-Meteo Geocoding API](https://open-meteo.com/en/docs/geocoding-api) as you type.
 
-First, run the development server:
+**Live demo:** <your-link>
+
+## Features
+
+- Debounced input (300ms, 2-character minimum)
+- Loading, empty and error states, with a retry button
+- Keyboard navigation: `↑` `↓` `Home` `End` `Enter` `Esc` `Tab`
+- Stale and out-of-order responses handled with `AbortController` and an `ignore` flag
+- Client-side cache for repeat queries
+- ARIA combobox pattern for accessibility
+
+## Run locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `app/Typeahead.jsx`: the component
+- `app/page.jsx`: demo page
 
-## Learn More
+## Notes
 
-To learn more about Next.js, take a look at the following resources:
+**Tradeoffs:** plain hooks instead of React Query to keep the logic visible, and an unbounded in-memory cache that is fine for a demo.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+**Scaling:** proxy the API through a route handler, add CDN or Redis caching, use an LRU client cache, and add retries with backoff.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Testing:** Vitest and React Testing Library with fake timers and a mocked `fetch` (including out-of-order responses), plus Playwright for end-to-end tests.
